@@ -1,0 +1,49 @@
+[
+  {
+    "id": "assignment_conflict",
+    "query": "unrelated updates",
+    "budget_characters": 34,
+    "expected_literals": [
+      "timeout_ms=300",
+      "timeout_ms=500"
+    ],
+    "text": "Unrelated weather update. timeout_ms=300. Another unrelated note. timeout_ms=500. Older updates."
+  },
+  {
+    "id": "security_rule",
+    "query": "weather unrelated",
+    "budget_characters": 37,
+    "expected_literals": [
+      "retry_count=3",
+      "Do not delete logs."
+    ],
+    "text": "Weather is nice today. retry_count=3. Unrelated old mail. Do not delete logs. The rest is history."
+  },
+  {
+    "id": "korean_prohibition",
+    "query": "일정 날씨",
+    "budget_characters": 30,
+    "expected_literals": [
+      "로그를 삭제해서는 안 됩니다."
+    ],
+    "text": "날씨가 맑습니다. 로그를 삭제해서는 안 됩니다. 내일은 휴일입니다."
+  },
+  {
+    "id": "duplicate_assignment",
+    "query": "other note",
+    "budget_characters": 26,
+    "expected_literals": [
+      "status=BAD"
+    ],
+    "text": "status=BAD. Other old note. status=BAD. Further note."
+  },
+  {
+    "id": "overflow_expected",
+    "query": "weather",
+    "budget_characters": 5,
+    "expected_literals": [
+      "timeout_ms=300"
+    ],
+    "text": "timeout_ms=300. Weather is sunny."
+  }
+]
