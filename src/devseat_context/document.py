@@ -9,7 +9,7 @@ import re
 from typing import Callable
 
 from .engine import BudgetExceeded, ContextEngine
-from .relevance import lexical_relevance
+from .relevance import prepare_lexical_scorer
 
 _FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
 _PROSE_BREAK = re.compile(r"(?<=[.!?。！？])(?=\s|$)")
@@ -222,7 +222,8 @@ def compress_document(
         raise BudgetExceeded("required literal content exceeds budget")
     # A small proximity boost retains nearby explanatory sentences when they
     # fit. Only source adjacency is used; this is not semantic inference.
-    relevance = [lexical_relevance(query, text[s.start:s.end]) for s in merged]
+    score_text = prepare_lexical_scorer(query)
+    relevance = [score_text(text[s.start:s.end]) for s in merged]
     def score(i: int) -> float:
         near = max((relevance[j] for j in (i - 1, i + 1)
                     if 0 <= j < len(merged)), default=0.0)

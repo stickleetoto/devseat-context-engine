@@ -8,7 +8,7 @@ from dataclasses import dataclass
 import math
 from typing import Callable, Sequence
 
-from .relevance import lexical_relevance
+from .relevance import prepare_lexical_scorer
 
 
 class BudgetExceeded(ValueError):
@@ -108,7 +108,11 @@ class ContextEngine:
         protected = {i for i, seg in enumerate(seq) if seg.protected}
         if self._count(render(protected)) > budget:
             raise BudgetExceeded("protected content exceeds budget; nothing was silently truncated")
-        scores = tuple((s.id, lexical_relevance(query, s.text)) for s in seq) if query else ()
+        if query:
+            score_text = prepare_lexical_scorer(query)
+            scores = tuple((s.id, score_text(s.text)) for s in seq)
+        else:
+            scores = ()
         if original_tokens <= budget:
             selected = all_indices
         else:
