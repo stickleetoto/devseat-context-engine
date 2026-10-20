@@ -64,3 +64,61 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.4 experimental — Fact-Aware Compression
+
+This release adds **heuristic fact detection, candidate assignment conflicts,
+and auditable exact-offset fact protection**, not semantic rewriting or a claim
+of knowing which fact is true.
+
+~~~python
+from devseat_context import compress_fact_aware
+
+source = (
+    "Old note. timeout_ms=300. New note. timeout_ms=500. "
+    "Do not delete logs. Weather is sunny."
+)
+result = compress_fact_aware(
+    source, budget=55, query="timeout failure",
+    token_counter=len,  # character budget demonstration, NOT model tokens
+)
+print(result.text)
+print(result.audit.conflicts)
+print(result.audit.dropped)
+print(result.audit.fact_recall)
+~~~
+
+- Fact kinds: assignment (key=value and limited key: value), ISO-like date,
+  identifier, quantity, whole negation/prohibition clause. All detections
+  include original source string offsets.
+- Different literal values under the same normalized assignment key are
+  **candidate conflicts only**. No recency or truth is inferred.
+- Default strict policy requires all recognized assignments and negation
+  clauses; budget overflow raises BudgetExceeded.
+- Other fact kinds are audited but not automatically mandatory.
+  Pass required_kinds=frozenset() for audit-only ranking, or specify
+  required_kinds=frozenset({"assignment","negation","identifier"}).
+- FactAudit counts precise source offsets, not matching text elsewhere.
+- compress_document accepts required_spans=((start,end), ...) to guard
+  individual repeated occurrences.
+- The v0.3 public API remains usable; no private Guard or BIO code copied.
+
+**Security:** strict default fact protection over arbitrary *untrusted* text
+is susceptible to budget-exhaustion denial of service if that text contains
+many fabricated key-values or prohibitions. Upstream integrations must
+classify trust, impose resource quotas and only promote approved source data
+to a required status. Output/logs can contain personal data or credentials.
+
+**Validation:**
+
+~~~powershell
+python -m pytest -q
+python -m ruff check src tests
+python -m devseat_context.fact_benchmark
+~~~
+
+The fact benchmark uses just **five synthetic examples** and character
+budgets. Gold literals are kept out of the compression input. This measures
+literal retention and fail-closed errors, not LLM answer correctness, semantic
+faithfulness, tokenizer-exact savings, or representative system performance.
+See [v0.4 research memo](docs/FACT_AWARE_RESEARCH_20261020.md).
