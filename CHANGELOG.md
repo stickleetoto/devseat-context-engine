@@ -1,3 +1,12 @@
+## 0.4.0 — experimental fact-aware compression (2026-10-20)
+
+- Exact-offset heuristic scanning: assignments, dates, identifiers, quantities, negation clauses.
+- Candidate key-value conflict discovery, with no automatic winner or truth claim.
+- Fail-closed required-fact source spans and offset-based FactAudit.
+- Optional required_spans protects multiple occurrences of identical literals.
+- Hardened source-alignment verification on original pass-through documents.
+- Public fact-retention micro-benchmark and additional CI checks.
+
 # Changelog
 
 ## 0.3.0 (2026-10-20) — experimental

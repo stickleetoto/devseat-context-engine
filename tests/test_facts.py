@@ -4,7 +4,7 @@ from dataclasses import replace
 import pytest
 
 from devseat_context import (
-    BudgetExceeded, EvidenceSpan, Fact, MissingEvidence,
+    BudgetExceeded, EvidenceSpan, MissingEvidence,
     audit_facts, candidate_conflicts, compress_document, compress_fact_aware,
     extract_facts, verify_source_alignment,
 )
