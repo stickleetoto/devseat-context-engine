@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.5 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.6 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,62 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.6 experimental — explicit tokenizer and retention audit
+
+**New:** Optional real BPE tokenizer counter and independently labeled source-offset
+retention evaluation. The runtime remains pure Python; tiktoken is an OPTIONAL
+extra and no LLM API key is required.
+
+~~~powershell
+python -m pip install -e ".[dev,tokenizers]"
+python -m pytest -q
+python -m devseat_context.quality_benchmark
+~~~
+
+~~~python
+from devseat_context import (
+    TiktokenCounter, FinalBudget, verify_final_budget,
+    compress_document, audit_quality, locate_gold,
+)
+
+counter = TiktokenCounter.for_encoding("cl100k_base")
+source = "Unrelated memo. E401 authentication failure. Other notes."
+budget = FinalBudget(
+    context_window=100,
+    output_reservation=30, framing_overhead=10, safety_margin=10
+)
+result = compress_document(
+    source, budget=budget.input_limit,
+    query="authentication failure", token_counter=counter,
+)
+verify_final_budget(result.text, counter, budget)
+gold = [locate_gold(source, "E401", "error-id")]
+print(audit_quality(source, result, gold).exact_span_recall)
+~~~
+
+- TiktokenCounter.for_encoding(name) uses an explicitly verified BPE
+  encoding; for_model(name) uses tiktoken's known mapping. Unknown names
+  are rejected, NOT silently mapped to another model. Initial tiktoken
+  encoding-data load may require internet access before cache is populated.
+- Only **plain text encoding** is measured. Entire provider API requests may
+  count roles, chat delimiters, tools, images and additional messages.
+  FinalBudget reservations are caller estimates and do not claim API-level
+  exactness. RenderedTokenCounter can count a caller-serialized plain-text
+  envelope when the caller knows that format; it is not a turnkey chat
+  serializer. Do not count known wrapper tokens twice.
+- Independent GoldEvidence labels and source offsets are used for evaluation,
+  NEVER passed to the compressor. QualityResult measures exact span coverage
+  and source alignment, NOT truth, semantics or task accuracy.
+- 12 synthetic fixture cases with 18 annotated spans provide a regression
+  smoke baseline. Their **14/18** retained-span outcome is limited to a tiny
+  hand-built dataset under character-based budgets; it is NOT a broad metric.
+  In particular, negations and corrected values may be dropped by the
+  plain document selector. Use trusted required-span policy when a known
+  critical fact must be preserved.
+
+See [tokenization/quality engineering notes](docs/TOKENIZATION_EVALUATION_20261020.md)
+and [v1 readiness gates](docs/V1_READINESS.md).
 
 ## v0.5 experimental — Temporal Provenance
 

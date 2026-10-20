@@ -1,3 +1,12 @@
+## 0.6.0 — tokenizer and evidence audit (2026-10-20)
+
+- Optional tiktoken encoding/model adapters, with explicit failure on unrecognized mappings.
+- RenderedTokenCounter and FinalBudget checks with output/framing reservations.
+- Standalone independent-labeled source-offset quality auditor, including duplicate evidence.
+- Twelve public synthetic Korean/English/code/log/date/negation examples and command-line evaluation harness.
+- Expanded cross-version CI and local optional-tokenizer test coverage.
+- No claims of message-level provider-accurate counts, semantic preservation, or representative LLM task performance.
+
 ## 0.5.0 (experimental) — explicit temporal provenance (2026-10-20)
 
 - Introduced TemporalFact with exact source offsets, source and scope labels, and optional timezone-aware observed/valid timestamps.
