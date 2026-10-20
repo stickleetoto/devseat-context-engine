@@ -16,6 +16,7 @@ from .integrity import (
     EvidenceBundle, EvidenceObligation, compress_with_integrity,
 )
 from .quality import audit_quality, locate_gold
+from .risk import detect_risks
 
 FAMILIES = (
     "en_prohibition", "ko_prohibition", "config_revision",
@@ -74,6 +75,9 @@ def generate_cases(count: int = 150, seed: int = 8042) -> list[dict]:
 def evaluate_cases(cases: list[dict]) -> dict:
     rows = []
     ids = set()
+    detector_hits = 0
+    detector_total = 0
+    family_detection = {}
     for case in cases:
         if case["id"] in ids:
             raise ValueError("duplicate case id")
@@ -83,6 +87,17 @@ def evaluate_cases(cases: list[dict]) -> dict:
             locate_gold(source, literal, label, occurrence=occurrence)
             for literal, label, occurrence in case["gold"]
         )
+        signals = detect_risks(source)
+        detected = sum(
+            any(s.start <= g.start and s.end >= g.end for s in signals)
+            for g in gold
+        )
+        detector_hits += detected
+        detector_total += len(gold)
+        family = case["family"]
+        family_detection.setdefault(family, [0, 0])
+        family_detection[family][0] += detected
+        family_detection[family][1] += len(gold)
         obligations = tuple(
             EvidenceObligation(g.label, g.start, g.end, source[g.start:g.end])
             for g in gold
@@ -135,8 +150,19 @@ def evaluate_cases(cases: list[dict]) -> dict:
             "recall_on_success": hits / success_gold if success_gold else None,
             "effective_recall_with_refusals": hits / total_gold if total_gold else None,
         }
-    return {"summary": summary, "sample_count": len(cases),
-            "families": sorted(set(case["family"] for case in cases))}
+    return {
+        "summary": summary, "sample_count": len(cases),
+        "families": sorted(set(case["family"] for case in cases)),
+        "risk_detector": {
+            "annotated_spans_detected": detector_hits,
+            "annotated_spans_total": detector_total,
+            "reference_coverage": detector_hits / detector_total if detector_total else None,
+            "by_family": {
+                key: {"detected": values[0], "total": values[1]}
+                for key, values in sorted(family_detection.items())
+            },
+        },
+    }
 
 
 def main() -> None:
