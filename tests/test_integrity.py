@@ -4,7 +4,7 @@ import random
 
 import pytest
 
-from devseat_context import BudgetExceeded, compress_document
+from devseat_context import BudgetExceeded
 from devseat_context.integrity import (
     EvidenceBundle, EvidenceContractError, EvidenceObligation,
     EvidenceReviewRequired, compress_with_integrity,
