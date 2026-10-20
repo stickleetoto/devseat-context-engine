@@ -19,3 +19,7 @@ where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+
+[tool.ruff.lint]
+# Keep safety and correctness checks strict; formatting/import rules are a separate migration.
+select = ["E4", "E7", "E9", "F"]

@@ -1,13 +1,54 @@
-from .engine import BudgetExceeded, ContextEngine, ContextResult, Segment, approximate_tokens, available_input_budget
-from .relevance import lexical_features, lexical_relevance
-from .document import MissingEvidence, EvidenceSpan, DocumentResult, split_document, compress_document, verify_source_alignment
-__all__ = ["BudgetExceeded", "ContextEngine", "ContextResult", "Segment", "approximate_tokens", "available_input_budget", "lexical_features", "lexical_relevance", "MissingEvidence", "EvidenceSpan", "DocumentResult", "split_document", "compress_document", "verify_source_alignment"]
+"""CPU-first source-aligned context selection and fact auditing."""
 
-from .facts import (
-    Fact, AssignmentConflict, FactAudit, FactAwareResult,
-    extract_facts, candidate_conflicts, audit_facts, compress_fact_aware,
+from .document import (
+    DocumentResult,
+    EvidenceSpan,
+    MissingEvidence,
+    compress_document,
+    split_document,
+    verify_source_alignment,
 )
-__all__.extend([
-    "Fact", "AssignmentConflict", "FactAudit", "FactAwareResult",
-    "extract_facts", "candidate_conflicts", "audit_facts", "compress_fact_aware",
-])
+from .engine import (
+    BudgetExceeded,
+    ContextEngine,
+    ContextResult,
+    Segment,
+    approximate_tokens,
+    available_input_budget,
+)
+from .facts import (
+    AssignmentConflict,
+    Fact,
+    FactAudit,
+    FactAwareResult,
+    audit_facts,
+    candidate_conflicts,
+    compress_fact_aware,
+    extract_facts,
+)
+from .relevance import lexical_features, lexical_relevance
+
+__all__ = [
+    "AssignmentConflict",
+    "BudgetExceeded",
+    "ContextEngine",
+    "ContextResult",
+    "DocumentResult",
+    "EvidenceSpan",
+    "Fact",
+    "FactAudit",
+    "FactAwareResult",
+    "MissingEvidence",
+    "Segment",
+    "approximate_tokens",
+    "audit_facts",
+    "available_input_budget",
+    "candidate_conflicts",
+    "compress_document",
+    "compress_fact_aware",
+    "extract_facts",
+    "lexical_features",
+    "lexical_relevance",
+    "split_document",
+    "verify_source_alignment",
+]
