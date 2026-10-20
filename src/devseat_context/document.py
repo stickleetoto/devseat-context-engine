@@ -230,10 +230,26 @@ def compress_document(
 
     candidates = sorted((i for i in range(len(merged)) if i not in mandatory),
                         key=lambda i: (-score(i), i))
-    for i in candidates:
-        attempt = selected | {i}
-        if engine._count(render(attempt)) <= budget:
-            selected = attempt
+    if token_counter is len:
+        # For exact Python character budgets, counting fragment and separator
+        # lengths is algebraically equivalent to rejoining every candidate.
+        # Never use this path for BPE or user-provided nonadditive counters.
+        sep_chars = len(separator)
+        used = sum(merged[i].end - merged[i].start for i in selected)
+        if selected:
+            used += (len(selected) - 1) * sep_chars
+        for i in candidates:
+            next_used = used + merged[i].end - merged[i].start
+            if selected:
+                next_used += sep_chars
+            if next_used <= budget:
+                selected.add(i)
+                used = next_used
+    else:
+        for i in candidates:
+            attempt = selected | {i}
+            if engine._count(render(attempt)) <= budget:
+                selected = attempt
     output = render(selected)
     if engine._count(output) > budget or any(lit not in output for lit in required_literals):
         raise BudgetExceeded("compressed output exceeds budget or breaks required evidence")
