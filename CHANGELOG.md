@@ -1,3 +1,14 @@
+## 0.8.2 — exact evidence-integrity and conservative review (2026-10-21)
+
+- Add explicit source-offset obligations checked against original text.
+- Bundle jointly necessary evidence, e.g. older and corrected values.
+- Default review policy refuses output if recognized selected-risk spans are omitted.
+- Separate audit and trusted require risk policies with fail-closed quotas.
+- Add 120 deterministic stress cases and 150 generated bilingual/correction
+  examples; benchmark distinguishes successful retention and refusals.
+- Preserve v0.8.1 CPU, alignment and token-counter behavior. Semantic
+  equivalence and real LLM answer correctness are not established.
+
 ## 0.8.1 — prepared lexical scoring and CPU hotspot diagnosis (2026-10-21)
 
 - Compute query features once per compression; remove per-fragment duplicate query tokenization.

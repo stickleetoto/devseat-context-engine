@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.8.1 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.8.2 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,68 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.8.2 experimental — exact evidence-integrity and review gate
+
+This adds an explicit, caller-owned evidence contract. Important facts are
+tracked by exact source character offsets, not by occurrences of the same
+string elsewhere. Source documents do not grant themselves authority.
+
+~~~python
+from devseat_context import (
+    EvidenceObligation, EvidenceBundle, BudgetExceeded,
+    EvidenceReviewRequired, compress_with_integrity,
+)
+
+source = "timeout_ms=100. Other notes. timeout_ms=500."
+old_text = "timeout_ms=100"
+new_text = "timeout_ms=500"
+pos = source.index(new_text)
+old = EvidenceObligation("old", 0, len(old_text), old_text)
+new = EvidenceObligation("new", pos, pos + len(new_text), new_text)
+try:
+    result = compress_with_integrity(
+        source, budget=33, query="notes", token_counter=len,
+        obligations=(old, new),
+        bundles=(EvidenceBundle("history", ("old", "new")),),
+        risk_mode="review",
+    )
+except EvidenceReviewRequired:
+    print("Recognized risk omitted: manual review required")
+except BudgetExceeded:
+    print("Required evidence cannot fit: increase budget")
+else:
+    print(result.text, result.retained_labels)
+~~~
+
+Three risk modes are available: audit (report losses only), review (default;
+fail closed if recognized selected-risk kinds are omitted) and require
+(caller-authorized automatic preservation of chosen heuristic risk kinds).
+The latter must not be used indiscriminately on untrusted retrieved text:
+an attacker could make the entire document appear mandatory.
+
+Every successful call retains all explicit mandatory obligations and
+members of evidence bundles. A refused call is NOT counted as success.
+Source-character, obligation, bundle and scanner-signal quotas apply.
+
+This does not establish semantic entailment, complete detection of critical
+content, factual truth or answer equivalence. No model or GPU is required.
+
+~~~powershell
+python -m pytest -q
+python -m devseat_context.integrity_benchmark --count 150 --seed 8042
+~~~
+
+The benchmark is 150 code-generated cases, not independent human-reviewed
+held-out work. In the current CI run, the plain selector kept 74/225
+annotated source spans; default review refused 104/150 cases and the
+trust-supplied contract refused 76/150, preserving all required spans in
+its 74 successful cases. The detector itself only recognized 150/225
+benchmark reference spans (none of the error/date or path references). The trusted-contract experimental arm intentionally receives
+the ground-truth source offsets; its success rate evaluates the contract,
+not automatic detection. Reports separate refusals and evidence retention.
+
+See [Evidence integrity analysis](docs/EVIDENCE_INTEGRITY_20261021.md).
 
 ## v0.8.1 experimental — Prepared lexical relevance (CPU performance)
 

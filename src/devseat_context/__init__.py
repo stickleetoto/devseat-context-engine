@@ -26,6 +26,14 @@ from .facts import (
     compress_fact_aware,
     extract_facts,
 )
+from .integrity import (
+    EvidenceBundle,
+    EvidenceContractError,
+    EvidenceObligation,
+    EvidenceReviewRequired,
+    IntegrityResult,
+    compress_with_integrity,
+)
 from .quality import GoldEvidence, QualityResult, audit_quality, locate_gold
 from .relevance import lexical_features, lexical_relevance
 from .risk import (
@@ -65,12 +73,17 @@ __all__ = [
     "ContextResult",
     "CorrectionApproval",
     "DocumentResult",
+    "EvidenceBundle",
+    "EvidenceContractError",
+    "EvidenceObligation",
+    "EvidenceReviewRequired",
     "EvidenceSpan",
     "Fact",
     "FactAudit",
     "FactAwareResult",
     "FinalBudget",
     "GoldEvidence",
+    "IntegrityResult",
     "MissingEvidence",
     "QualityResult",
     "RenderedTokenCounter",
@@ -98,6 +111,7 @@ __all__ = [
     "compress_fact_aware",
     "compress_risk_aware",
     "compress_temporal",
+    "compress_with_integrity",
     "detect_risks",
     "extract_facts",
     "lexical_features",
