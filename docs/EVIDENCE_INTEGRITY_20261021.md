@@ -60,6 +60,26 @@ but the fraction of refused calls can rise under strict budgets.
 No provider token measurements, human-reviewed held-out scenarios or
 paired raw-vs-compressed real model tasks are present.
 
+
+### Observed CI results (seed 8042, 150 generated cases)
+
+| Mode | Success | Refused | Source-offset gold recall on success | Gold kept across ALL cases (refusals=0) |
+|---|---:|---:|---:|---:|
+| Plain selector | 150 | 0 | 74/225 = 32.9% | 74/225 = 32.9% |
+| Unannotated risk review | 46 | 104 | 17/71 = 23.9% | 17/225 = 7.6% |
+| Oracle-assisted trusted contract | 74 | 76 | 103/103 = 100% | 103/225 = 45.8% |
+
+The *recognized-risk detector* independently covered 150/225 = 66.7% of
+the synthetic gold offsets. It detected all of the benchmark's denial,
+assignment-conflict and repeated-ID annotations but **0/50**
+error/date spans and **0/25** path spans, because those categories are
+not currently classified as critical risk. This does NOT constitute
+generalizable precision/recall on new data. The strict contract numbers
+are an oracle-assisted invariant check. Low all-case coverage is the
+cost of refusing incomplete outputs, not an improvement in standalone
+automatic QA. Such a refusal needs an authorized caller fallback or
+more context budget, never fabricated text.
+
 ## v1 release blockers
 
 Independently reviewed 100+ held-out cases, corrections/negation scope,

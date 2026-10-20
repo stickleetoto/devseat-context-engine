@@ -118,7 +118,11 @@ python -m devseat_context.integrity_benchmark --count 150 --seed 8042
 ~~~
 
 The benchmark is 150 code-generated cases, not independent human-reviewed
-held-out work. The trusted-contract experimental arm intentionally receives
+held-out work. In the current CI run, the plain selector kept 74/225
+annotated source spans; default review refused 104/150 cases and the
+trust-supplied contract refused 76/150, preserving all required spans in
+its 74 successful cases. The detector itself only recognized 150/225
+benchmark reference spans (none of the error/date or path references). The trusted-contract experimental arm intentionally receives
 the ground-truth source offsets; its success rate evaluates the contract,
 not automatic detection. Reports separate refusals and evidence retention.
 
