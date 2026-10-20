@@ -34,3 +34,15 @@ jobs:
         run: python -m devseat_context.quality_benchmark
       - name: Risk preservation benchmark smoke test
         run: python -m devseat_context.risk_benchmark
+
+  cpu-benchmark:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install package
+        run: python -m pip install -e .
+      - name: CPU fast-path benchmark (no absolute latency threshold)
+        run: python -m devseat_context.perf_benchmark --sizes 250 1000 10000 50000 --repetitions 3 --legacy-max 250

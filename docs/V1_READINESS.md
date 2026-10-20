@@ -25,7 +25,7 @@ remain experimental and may fail closed on untrusted or incomplete input.
   misses instead of optimizing only a demo benchmark.
 - Respect trusted caller scope; never promote attacker-supplied content.
 
-### v0.8
+### v0.8 (experimental exact-character fast path)
 - CPU p50/p95, memory and complexity tests at 1k/10k/50k spans.
 - Fast stable selection with non-additive tokenizer edge cases tested.
 - Robust streaming/multi-turn interfaces, persistence-free by default.
