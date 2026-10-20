@@ -116,10 +116,23 @@ class ContextEngine:
             by_id = dict(scores)
             candidates = sorted(all_indices - protected,
                                 key=lambda i: (-seq[i].priority, -by_id.get(seq[i].id, 0.0), i))
-            for i in candidates:
-                attempt = selected | {i}
-                if self._count(render(attempt)) <= budget:
-                    selected = attempt
+            if self._counter is len:
+                # Exact additive arithmetic is valid ONLY for builtin str len.
+                # Generic/BPE counters can be nonadditive across boundaries.
+                sep_chars = len(self._separator)
+                used = sum(len(seq[i].text) for i in selected)
+                if selected:
+                    used += (len(selected) - 1) * sep_chars
+                for i in candidates:
+                    next_used = used + len(seq[i].text) + (sep_chars if selected else 0)
+                    if next_used <= budget:
+                        selected.add(i)
+                        used = next_used
+            else:
+                for i in candidates:
+                    attempt = selected | {i}
+                    if self._count(render(attempt)) <= budget:
+                        selected = attempt
         output = render(selected)
         output_tokens = self._count(output)
         if output_tokens > budget:

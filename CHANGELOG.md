@@ -1,3 +1,11 @@
+## 0.8.0 — exact-character CPU selection optimization (2026-10-20)
+
+- Builtin-len exact-character fast paths for segment and document span selection.
+- Generic/tokenizer-based counters keep full-render accounting with nonadditive safety.
+- Deterministic randomized equivalence tests against lambda-len baseline.
+- 50,000 segment budget smoke case and CPU p50/p95/peak Python allocation profiler.
+- No semantic rewrite, no trust-policy changes or production throughput guarantee.
+
 ## 0.7.0 — opt-in risk-aware preservation (2026-10-20)
 
 - Exact source-offset candidate signals for negation, revisions, assignment conflict and repeated IDs.

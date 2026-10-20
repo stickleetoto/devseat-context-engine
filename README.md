@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.7 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.8 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,33 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.8 experimental: additive CPU fast path
+
+When the caller explicitly supplies Python's built-in len as the counter, the
+whole-segment and source-span selectors now track exact fragment and separator
+lengths without repeatedly assembling the entire candidate output.
+
+This is mathematically exact for CHARACTER budgets only. For BPE tokenizers,
+UTF-8 estimates, and other custom counters, the original conservative full
+render-and-recount path remains unchanged. The fast path does not make
+provider-token quotas accurate. Existing protected spans, source order,
+deterministic ranking, errors and audit metadata are preserved.
+
+To compare on your own CPU, with recorded Python/platform, sampled p50/p95
+wall time, and peak Python allocation tracking:
+
+~~~powershell
+python -m devseat_context.perf_benchmark --sizes 1000 10000 50000 --repetitions 5
+~~~
+
+The legacy generic-lambda baseline is only profiled for small inputs by
+default (1000 segments), because its repeated re-rendering scales poorly.
+The profiler uses tracemalloc, which affects timing; run on an idle machine
+with the same options when comparing hardware. A 5-run p95 is still noisy.
+These are NOT whole-agent latency, GPU latency, or exact model-token savings.
+
+See [v0.8 CPU research](docs/CPU_PERFORMANCE_20261020.md).
 
 ## v0.7 experimental: risk detection and opt-in protection
 
