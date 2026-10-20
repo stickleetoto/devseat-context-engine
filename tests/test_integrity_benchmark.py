@@ -20,6 +20,9 @@ def test_no_undisclosed_reference_loss_on_contract_success():
         assert summary["successful"] + summary["refused"] == 150
         assert summary["gold_spans"] >= 150
         assert 0 <= summary["effective_recall_with_refusals"] <= 1
+    assert report["risk_detector"]["annotated_spans_total"] == 225
+    assert 0 < report["risk_detector"]["annotated_spans_detected"] < 225
+    assert len(report["risk_detector"]["by_family"]) == 6
     strict = report["summary"]["trusted_contract"]
     assert strict["successful"] > 0
     assert strict["retained_on_success"] == strict["gold_on_success"]
