@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "devseat-context-engine"
-version = "0.2.0"
-description = "CPU-first, query-aware extractive context selection"
+version = "0.3.0"
+description = "CPU-first, provenance-aware extractive context compression"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "Apache-2.0"

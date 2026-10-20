@@ -1,0 +1,41 @@
+[
+  {
+    "id": "ko_auth",
+    "query": "로그인 인증 실패 오류코드",
+    "budget_characters": 90,
+    "text": "오늘은 날씨가 맑습니다. 일기예보를 확인했습니다. 배달 음식이 도착했습니다. 어제도 날씨가 좋았습니다.\n\n인증 실패 발생. 오류 코드는 E401이며 2026-10-20 10:42에 발생했습니다. 재시도는 3회 가능합니다. 네트워크 문제가 있었습니다.\n\n기타 공지사항입니다. 동아리 모임이 곧 시작합니다.",
+    "expected_literals": [
+      "E401",
+      "2026-10-20 10:42"
+    ]
+  },
+  {
+    "id": "en_service",
+    "query": "service failed login timeout",
+    "budget_characters": 94,
+    "text": "The weather is pleasant today. A team member bought some coffee. Several unrelated messages were sent.\n\nService failed after login timeout at 15:07 UTC. The incident number is INC-209. Logs were retained by the team. The meeting starts tomorrow.\n\nOld reminder: submit the restaurant review next week.",
+    "expected_literals": [
+      "INC-209",
+      "15:07 UTC"
+    ]
+  },
+  {
+    "id": "code_trace",
+    "query": "traceback TypeError exception",
+    "budget_characters": 125,
+    "text": "A review comment mentioned style updates.\n\nTraceback (most recent call last):\nFile \"api.py\", line 21\nTypeError: object is not iterable\n\nThe next review mentioned a documentation change. The team updated the logo.",
+    "expected_literals": [
+      "TypeError: object is not iterable",
+      "api.py"
+    ]
+  },
+  {
+    "id": "precise_id",
+    "query": "payment refund transaction order",
+    "budget_characters": 96,
+    "text": "Reading club notes. Books are ordered alphabetically. Subscription unrelated.\n\nPayment refund denied. Order ID ORD-7781 did not match. The operator escalated the issue. Additional documentation will be attached.\n\nWeekend plans. Public transit is on schedule.",
+    "expected_literals": [
+      "ORD-7781"
+    ]
+  }
+]
