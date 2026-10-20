@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.8 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.8.1 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,39 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.8.1 experimental — Prepared lexical relevance (CPU performance)
+
+The v0.8 50,000-fragment Windows benchmark showed p50 = 3,411.9ms,
+and a 10,000-fragment controlled cProfile reproduction attributed ~85%
+of measured cumulative time to lexical relevance scoring. The same query
+was being tokenized once *per fragment*, even when it never changed.
+
+v0.8.1 computes query features **once per compression call**, then
+scores each fragment against that prepared set. For English-only queries,
+it skips Hangul-bigram scanning that cannot affect the score. This
+preserves all original scores, ordering, protected evidence and budgets.
+
+- No global query cache: temporary lexical state does not persist between
+  requests or tenants.
+- No learned model, network calls, GPU, or public API change required.
+- Original `lexical_relevance(query, text)` remains available and identical;
+  the prepared scorer is a reusable helper in `devseat_context.relevance`.
+- The exact-character optimization from v0.8 and conservative provider
+  tokenizer path are unchanged.
+
+To reproduce on your Windows laptop:
+
+~~~powershell
+python -m devseat_context.perf_profile --segments 10000 --top 15
+python -m devseat_context.perf_benchmark --sizes 1000 10000 50000 --repetitions 5
+~~~
+
+The profiler runs only synthetic text and prints function timings rather
+than private prompt data. Profiler timing is inflated by cProfile overhead;
+use the benchmark CLI for real latency comparisons. Verify on identical
+hardware and power conditions. See
+[CPU hotspot investigation](docs/LEXICAL_HOTSPOT_20261021.md).
 
 ## v0.8 experimental: additive CPU fast path
 

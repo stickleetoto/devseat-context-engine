@@ -1,3 +1,11 @@
+## 0.8.1 — prepared lexical scoring and CPU hotspot diagnosis (2026-10-21)
+
+- Compute query features once per compression; remove per-fragment duplicate query tokenization.
+- Skip unnecessary Hangul regex scans for text where the query has no Hangul bigrams.
+- Preserve exact lexical scores, risk policies, source selection and token-budget behavior.
+- Add randomized Unicode/English/Korean score and end-to-end result equivalence tests.
+- Add synthetic cProfile hot-path diagnostic CLI; no user prompt contents or network calls.
+
 ## 0.8.0 — exact-character CPU selection optimization (2026-10-20)
 
 - Builtin-len exact-character fast paths for segment and document span selection.
