@@ -15,10 +15,10 @@ from .engine import BudgetExceeded
 
 # Avoid URLs such as https://... being parsed as key:value assignments.
 _ASSIGNMENT = re.compile(
-    r'(?<![\w])(?P<key>[A-Za-z_][A-Za-z0-9_.-]{1,63})\s*'
+    r'(?<![\w])(?P<key>[A-Za-z_][A-Za-z0-9_.-]{0,63})\s*'
     r'(?:=|:(?!//))\s*'
     r'(?P<value>"[^"\n]{1,128}"|'
-    r"'[^'\n]{1,128}'|[A-Za-z0-9_./-]{1,128})"
+    r"'[^'\n]{1,128}'|[A-Za-z0-9_/-](?:[A-Za-z0-9_./-]{0,126}[A-Za-z0-9_/-])?)"
     r'(?=$|[\s,;)\]}])',
 )
 _DATE = re.compile(r'(?<![\d])\d{4}-\d{2}-\d{2}(?![\d])')

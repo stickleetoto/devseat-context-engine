@@ -263,6 +263,8 @@ def verify_source_alignment(source: str, result: DocumentResult, *, separator: s
         result.text == source and not result.dropped_spans
         and result.selected_spans == split_document(source)
     )
-    return (expected == result.text or passthrough) and all(
+    if result.text == source:
+        return passthrough and all(lit in result.text for lit in result.required_literals)
+    return expected == result.text and all(
         lit in result.text for lit in result.required_literals
     )
