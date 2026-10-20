@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.3 experimental** — A CPU-first, model-optional context **selection + document span extraction** toolkit. This is not model-based semantic compression, lossless encoding, or a prompt-injection sanitizer.
+**v0.5 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -10,6 +10,7 @@ cd devseat-context-engine
 python -m pip install -e ".[dev]"
 python -m pytest -q
 python -m devseat_context.benchmark benchmarks/fixtures.json
+python -m devseat_context.fact_benchmark
 ```
 
 Runs with Python 3.10+. The runtime uses only the standard library. `pytest` is a development-only dependency.
@@ -64,6 +65,55 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.5 experimental — Temporal Provenance
+
+The **temporal evidence policy** distinguishes observation time from truth.
+It uses exact source offsets and explicit, externally verified correction
+approvals to avoid silently discarding unresolved conflicts.
+
+```python
+from devseat_context import TemporalFact, CorrectionApproval, compress_temporal
+
+source = "timeout_ms=300. Unrelated memo. timeout_ms=500."
+old = TemporalFact("old", "tenant-a", "timeout_ms", "timeout_ms=300", 0, 14)
+pos = source.index("timeout_ms=500")
+new = TemporalFact("new", "tenant-a", "timeout_ms", "timeout_ms=500",
+                   pos, pos + len("timeout_ms=500"))
+
+# Approval must come from a trusted caller or audited system, NOT source text.
+result = compress_temporal(
+    source, [old, new], budget=15,
+    approved_corrections=(CorrectionApproval("new", "old", "ticket-124"),),
+    token_counter=len,   # demonstration character counter, not model tokens
+)
+print(result.text)                          # newest approved evidence
+print(result.analysis.groups[0].status)     # "approved_correction"
+print(result.visible_superseded_ids)        # previously corrected facts still visible
+```
+
+Without explicit approval, **both differing values remain required** and an
+insufficient budget raises `BudgetExceeded`. Timestamps are hints about
+observation order only; they never automatically overwrite older facts.
+
+The record metadata and correction approval must originate in trustworthy
+integration code. The engine validates that `value` is the **exact substring**
+at `[start:end]` and that approvals connect the same explicit scope and key.
+It rejects cycles, correction forks, cross-scope edges, naive timestamps and
+unknown record IDs. Supported metadata includes aware `datetime` objects for
+`observed_at` and `valid_at`; parsing arbitrary natural-language dates is
+not implemented.
+
+**Caveat:** approved-corrected source text is eligible for dropping but not
+automatically erased. When it remains visible (e.g. source fits the budget),
+consult `visible_superseded_ids` before sending it to an LLM. Other
+unannotated facts and prohibitions are NOT automatically protected by this
+temporal-specific API. Use the v0.4 fact policy separately where appropriate.
+Every declared active/unresolved temporal record is protected, so untrusted
+record metadata could exhaust the budget. Validate approvals, scopes, record
+count, permissions and source trust at the API boundary.
+
+See [temporal design and risk notes](docs/TEMPORAL_PROVENANCE_20261020.md).
 
 ## v0.4 experimental — Fact-Aware Compression
 
