@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.3 experimental** — A CPU-first, model-optional context **selection + document span extraction** toolkit. This is not model-based semantic compression, lossless encoding, or a prompt-injection sanitizer.
+**v0.5 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -10,6 +10,7 @@ cd devseat-context-engine
 python -m pip install -e ".[dev]"
 python -m pytest -q
 python -m devseat_context.benchmark benchmarks/fixtures.json
+python -m devseat_context.fact_benchmark
 ```
 
 Runs with Python 3.10+. The runtime uses only the standard library. `pytest` is a development-only dependency.
