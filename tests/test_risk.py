@@ -187,3 +187,10 @@ def test_empty_selected_protection_is_explicit():
                                  token_counter=len)
     assert result.report.source_aligned
     assert result.report.policy == "require"
+
+def test_invalid_external_risk_signal_is_not_accepted():
+    source = "Never do this."
+    document = compress_document(source, 100, token_counter=len)
+    forged = RiskSignal("negation", 0, len(source) + 10)
+    with pytest.raises(ValueError):
+        audit_risks(source, document, (forged,))
