@@ -1,3 +1,11 @@
+## 0.7.0 — opt-in risk-aware preservation (2026-10-20)
+
+- Exact source-offset candidate signals for negation, revisions, assignment conflict and repeated IDs.
+- Audit mode leaves source selection unchanged; require mode uses caller-trusted risk kinds to preserve signals or fail closed.
+- Include source size and signal count quotas and independent-offset verification.
+- Compare risk protection vs plain v0.6 with explicit refusal counts.
+- Still CPU-only and does not automatically infer source trust or fact correctness.
+
 ## 0.6.0 — tokenizer and evidence audit (2026-10-20)
 
 - Optional tiktoken encoding/model adapters, with explicit failure on unrecognized mappings.

@@ -28,6 +28,15 @@ from .facts import (
 )
 from .quality import GoldEvidence, QualityResult, audit_quality, locate_gold
 from .relevance import lexical_features, lexical_relevance
+from .risk import (
+    RiskCompressionResult,
+    RiskLimitExceeded,
+    RiskReport,
+    RiskSignal,
+    audit_risks,
+    compress_risk_aware,
+    detect_risks,
+)
 from .tokenizers import (
     BudgetVerification,
     FinalBudget,
@@ -65,6 +74,10 @@ __all__ = [
     "MissingEvidence",
     "QualityResult",
     "RenderedTokenCounter",
+    "RiskCompressionResult",
+    "RiskLimitExceeded",
+    "RiskReport",
+    "RiskSignal",
     "Segment",
     "TemporalAnalysis",
     "TemporalCompressionResult",
@@ -78,11 +91,14 @@ __all__ = [
     "approximate_tokens",
     "audit_facts",
     "audit_quality",
+    "audit_risks",
     "available_input_budget",
     "candidate_conflicts",
     "compress_document",
     "compress_fact_aware",
+    "compress_risk_aware",
     "compress_temporal",
+    "detect_risks",
     "extract_facts",
     "lexical_features",
     "lexical_relevance",

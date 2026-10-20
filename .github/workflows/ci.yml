@@ -32,3 +32,5 @@ jobs:
         run: python -m devseat_context.fact_benchmark
       - name: Evidence quality benchmark smoke test
         run: python -m devseat_context.quality_benchmark
+      - name: Risk preservation benchmark smoke test
+        run: python -m devseat_context.risk_benchmark

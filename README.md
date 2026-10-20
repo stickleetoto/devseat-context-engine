@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.6 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.7 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,46 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.7 experimental: risk detection and opt-in protection
+
+Detect candidate source spans for English/Korean negation, revision markers,
+different literal values for the same assignment key and repeated IDs.
+This is not a semantic truth engine and does not approve corrections.
+
+~~~python
+from devseat_context import compress_risk_aware, BudgetExceeded
+
+source = "timeout_ms=100. timeout_ms=500. Never delete backup."
+try:
+    result = compress_risk_aware(
+        source, 65, query="timeout", token_counter=len,
+        policy="require",
+        protected_kinds=frozenset({"negation", "assignment_conflict"})
+    )
+except BudgetExceeded:
+    print("Protected evidence did not fit")
+else:
+    print(result.text, result.report.review_required)
+~~~
+
+Default audit mode retains the v0.6 selection algorithm and reports candidate
+loss. Require mode is ONLY for caller-approved trusted contexts and either
+retains every protected source occurrence or raises BudgetExceeded. Inputs
+have source-character and signal-count quotas. Untrusted content can fabricate
+important-looking statements to cause denial of service: do not elevate them
+to trusted rules.
+
+~~~powershell
+python -m pytest -q
+python -m devseat_context.risk_benchmark
+~~~
+
+The benchmark compares previously inspected synthetic development cases. Gold
+reference offsets are used for evaluation only, and explicit refusals are
+reported separately. It does not demonstrate real LLM task success.
+
+See [risk policy notes](docs/RISK_PRESERVATION_20261020.md).
 
 ## v0.6 experimental — explicit tokenizer and retention audit
 
