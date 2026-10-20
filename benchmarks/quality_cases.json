@@ -1,0 +1,172 @@
+[
+  {
+    "id": "ko_auth",
+    "source": "오늘 날씨는 화창합니다. 점심은 카레였습니다. 인증 실패 E401 발생. 로그는 보존되었습니다. 그리고 회의가 있었습니다.",
+    "query": "인증 실패 로그",
+    "budget_characters": 35,
+    "evidence": [
+      {
+        "label": "error",
+        "literal": "E401"
+      },
+      {
+        "label": "auth",
+        "literal": "인증 실패"
+      }
+    ]
+  },
+  {
+    "id": "ko_negation",
+    "source": "요약입니다. 모든 오래된 로그를 삭제해서는 안 됩니다. 보존 기간은 정책을 따릅니다. 날씨는 맑습니다.",
+    "query": "보존 정책 로그",
+    "budget_characters": 44,
+    "evidence": [
+      {
+        "label": "not-delete",
+        "literal": "삭제해서는 안 됩니다"
+      }
+    ]
+  },
+  {
+    "id": "en_error",
+    "source": "No new incident today. At midnight the API returned HTTP 502 Bad Gateway. The local cache was cleared. Everyone attended the meeting.",
+    "query": "API gateway error",
+    "budget_characters": 62,
+    "evidence": [
+      {
+        "label": "status",
+        "literal": "HTTP 502"
+      },
+      {
+        "label": "reason",
+        "literal": "Bad Gateway"
+      }
+    ]
+  },
+  {
+    "id": "en_negation",
+    "source": "The service was deployed. Never overwrite the original backup. The next release is scheduled tomorrow.",
+    "query": "service deployment backup",
+    "budget_characters": 50,
+    "evidence": [
+      {
+        "label": "prohibition",
+        "literal": "Never overwrite the original backup"
+      }
+    ]
+  },
+  {
+    "id": "mixed_lang",
+    "source": "서버가 시작됐습니다. Runtime exception in auth.py at line 42. 원인은 타입 오류입니다. 오늘 점심은 맛있었습니다.",
+    "query": "auth.py exception",
+    "budget_characters": 51,
+    "evidence": [
+      {
+        "label": "file",
+        "literal": "auth.py"
+      },
+      {
+        "label": "line",
+        "literal": "line 42"
+      }
+    ]
+  },
+  {
+    "id": "duplicate_ids",
+    "source": "Ticket INC-23 was raised. Unrelated note was added. Ticket INC-23 was closed. Another irrelevant item.",
+    "query": "ticket closed",
+    "budget_characters": 42,
+    "evidence": [
+      {
+        "label": "raised",
+        "literal": "INC-23",
+        "occurrence": 0
+      },
+      {
+        "label": "closed",
+        "literal": "INC-23",
+        "occurrence": 1
+      }
+    ]
+  },
+  {
+    "id": "corrected_value",
+    "source": "timeout_ms=100. Previously used setting. timeout_ms=500. New validated setting. Old text remains stored.",
+    "query": "validated setting",
+    "budget_characters": 52,
+    "evidence": [
+      {
+        "label": "old-setting",
+        "literal": "timeout_ms=100"
+      },
+      {
+        "label": "new-setting",
+        "literal": "timeout_ms=500"
+      }
+    ]
+  },
+  {
+    "id": "numeric_korean",
+    "source": "사용자 수는 30명입니다. 오후에는 회의가 있습니다. 응답 p95는 710ms입니다. 전날에는 아무 일이 없었습니다.",
+    "query": "응답 p95",
+    "budget_characters": 37,
+    "evidence": [
+      {
+        "label": "latency",
+        "literal": "710ms"
+      }
+    ]
+  },
+  {
+    "id": "path",
+    "source": "Changed documentation. Broken file at D:\\apps\\context\\core.py; could not load parser. The screenshots were updated.",
+    "query": "broken file parser",
+    "budget_characters": 65,
+    "evidence": [
+      {
+        "label": "path",
+        "literal": "D:\\apps\\context\\core.py"
+      }
+    ]
+  },
+  {
+    "id": "code",
+    "source": "Intro notes.\n```python\nconfig = {'timeout': 30}\nprint(config['timeout'])\n```\nOther discussion.",
+    "query": "python timeout config",
+    "budget_characters": 76,
+    "evidence": [
+      {
+        "label": "config",
+        "literal": "{'timeout': 30}"
+      }
+    ]
+  },
+  {
+    "id": "date",
+    "source": "All records were reviewed. Error E701 occurred on 2026-10-19. It required an incident response. New staff arrived.",
+    "query": "E701 incident date",
+    "budget_characters": 70,
+    "evidence": [
+      {
+        "label": "code",
+        "literal": "E701"
+      },
+      {
+        "label": "date",
+        "literal": "2026-10-19"
+      }
+    ]
+  },
+  {
+    "id": "negation_contrast",
+    "source": "The team discussed migration. This mode is NOT enabled by default. The experimental toggle is available to admins.",
+    "query": "enabled by default",
+    "budget_characters": 50,
+    "evidence": [
+      {
+        "label": "negation",
+        "literal": "NOT enabled"
+      }
+    ]
+  }
+]
