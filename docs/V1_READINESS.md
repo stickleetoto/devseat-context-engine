@@ -31,6 +31,14 @@ remain experimental and may fail closed on untrusted or incomplete input.
 - Robust streaming/multi-turn interfaces, persistence-free by default.
 - Reproduce developer-machine benchmark settings, hardware and seeds.
 
+### v0.8.2 (experimental evidence-integrity gate)
+
+- Caller-authorized exact source-offset obligations and all-required bundles.
+- Default risk review refuses detected omissions; declared required evidence
+  is always retained on success or the compressor fails closed.
+- 150 synthetic generated cases; independent human-reviewed held-out
+  evaluation and downstream model tests still open.
+
 ### v0.9
 - Well-specified adapter to DevSeat Agent Harness, typed BIO retrieval
   provenance, and optional Agent-X-Ray tracing.
