@@ -134,6 +134,7 @@ def compress_document(
     *,
     query: str = "",
     required_literals: tuple[str, ...] = (),
+    required_spans: tuple[tuple[int, int], ...] = (),
     token_counter: Callable[[str], int] | None = None,
     separator: str = "\n",
 ) -> DocumentResult:
@@ -149,6 +150,13 @@ def compress_document(
         raise TypeError("query must be a string")
     if not isinstance(required_literals, tuple):
         raise TypeError("required_literals must be a tuple")
+    if not isinstance(required_spans, tuple):
+        raise TypeError("required_spans must be a tuple")
+    for pair in required_spans:
+        if (not isinstance(pair, tuple) or len(pair) != 2
+                or any(type(n) is not int for n in pair)
+                or not 0 <= pair[0] < pair[1] <= len(text)):
+            raise ValueError("required_spans must contain valid (start,end) offsets")
     if not isinstance(separator, str):
         raise TypeError("separator must be a string")
     engine = ContextEngine(token_counter=token_counter, separator=separator)
@@ -163,11 +171,13 @@ def compress_document(
 
     # Merge the minimal consecutive units intersected by each required literal.
     # This retains the exact original literal even across sentence boundaries.
-    marked = [False] * len(chunks)
     groups: list[tuple[int, int]] = []
+    required_ranges = list(required_spans)
     for literal in dict.fromkeys(required_literals):
         begin = text.find(literal)
         end = begin + len(literal)
+        required_ranges.append((begin, end))
+    for begin, end in required_ranges:
         affected = [i for i, s in enumerate(chunks) if s.start < end and s.end > begin]
         if not affected:
             raise BudgetExceeded("required literal could not be mapped to a source span")
@@ -193,9 +203,7 @@ def compress_document(
         finish = last.end
         # Extend to literal's exact endpoints when surrounding whitespace is part
         # of the literal, without overlapping adjacent groups.
-        for literal in dict.fromkeys(required_literals):
-            p = text.find(literal)
-            q = p + len(literal)
+        for p, q in required_ranges:
             if p < finish and q > begin:
                 begin = min(begin, p)
                 finish = max(finish, q)
@@ -249,6 +257,12 @@ def verify_source_alignment(source: str, result: DocumentResult, *, separator: s
         fragments.append(source[span.start:span.end])
         previous_end = span.end
     expected = separator.join(fragments)
-    return (expected == result.text or (result.text == source and all(
-        source[s.start:s.end] in source for s in result.selected_spans
-    ))) and all(lit in result.text for lit in result.required_literals)
+    # A verbatim pass-through has gaps between the trimmed source units.
+    # Verify the entire expected span map, rather than trusting equality alone.
+    passthrough = (
+        result.text == source and not result.dropped_spans
+        and result.selected_spans == split_document(source)
+    )
+    return (expected == result.text or passthrough) and all(
+        lit in result.text for lit in result.required_literals
+    )
