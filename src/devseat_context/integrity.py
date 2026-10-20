@@ -78,6 +78,7 @@ def _validate_contract(
     *,
     max_source_chars: int,
     max_obligations: int,
+    max_bundles: int,
 ) -> set[str]:
     if not isinstance(source, str):
         raise TypeError("source must be str")
@@ -85,7 +86,10 @@ def _validate_contract(
         raise ValueError("max_source_chars must be nonnegative int")
     if type(max_obligations) is not int or max_obligations < 0:
         raise ValueError("max_obligations must be nonnegative int")
-    if len(source) > max_source_chars or len(obligations) > max_obligations:
+    if type(max_bundles) is not int or max_bundles < 0:
+        raise ValueError("max_bundles must be nonnegative int")
+    if (len(source) > max_source_chars or len(obligations) > max_obligations
+            or len(bundles) > max_bundles):
         raise EvidenceContractError("evidence contract resource limit exceeded")
     if any(not isinstance(o, EvidenceObligation) for o in obligations):
         raise TypeError("obligations must contain EvidenceObligation")
@@ -134,6 +138,7 @@ def compress_with_integrity(
     separator: str = "\n",
     max_source_chars: int = 100_000,
     max_obligations: int = 256,
+    max_bundles: int = 256,
     max_signals: int = 256,
 ) -> IntegrityResult:
     """Compress with verified source obligations and explicit risk policy.
@@ -155,6 +160,7 @@ def compress_with_integrity(
     required = _validate_contract(
         source, obligations, bundles,
         max_source_chars=max_source_chars, max_obligations=max_obligations,
+        max_bundles=max_bundles,
     )
     signals = detect_risks(
         source, max_source_chars=max_source_chars, max_signals=max_signals,

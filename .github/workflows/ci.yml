@@ -34,6 +34,8 @@ jobs:
         run: python -m devseat_context.quality_benchmark
       - name: Risk preservation benchmark smoke test
         run: python -m devseat_context.risk_benchmark
+      - name: Integrity contract benchmark smoke test
+        run: python -m devseat_context.integrity_benchmark --count 150 --seed 8042
 
   cpu-benchmark:
     runs-on: ubuntu-latest

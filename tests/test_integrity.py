@@ -225,3 +225,14 @@ def test_randomized_mandatory_evidence_never_silently_lost(seed):
     assert fact.expected_text in result.text
     assert result.document.output_tokens <= budget
     assert not result.document.estimated_tokens
+
+
+def test_bundle_count_quota_rejected():
+    src = "x=1. x=2."
+    a = obligation(src, "x=1", "a")
+    b = obligation(src, "x=2", "b")
+    with pytest.raises(EvidenceContractError):
+        compress_with_integrity(
+            src, 100, token_counter=len, obligations=(a, b),
+            bundles=(EvidenceBundle("pair", ("a", "b")),), max_bundles=0,
+        )
