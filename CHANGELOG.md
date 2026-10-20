@@ -1,3 +1,12 @@
+## 0.5.0 (experimental) — explicit temporal provenance (2026-10-20)
+
+- Introduced TemporalFact with exact source offsets, source and scope labels, and optional timezone-aware observed/valid timestamps.
+- Added CorrectionApproval: explicit caller-attested replacement edges; unknown, cyclic, forked and cross-scope approvals are rejected.
+- Added TemporalAnalysis: unresolved/consistent/approved-correction candidate groups, active IDs and optional latest-observation hint (never a truth decision).
+- Added compress_temporal: protects all active/unresolved evidence as required source spans; budget failure is explicit, previously approved-corrected facts remain auditable if still visible.
+- Added strict input bounds and adversarial regression tests; CPU-only with no new runtime dependencies.
+- This is not semantic entailment, logical resolution, or automatically trusted correction inference.
+
 ## 0.4.0 — experimental fact-aware compression (2026-10-20)
 
 - Exact-offset heuristic scanning: assignments, dates, identifiers, quantities, negation clauses.

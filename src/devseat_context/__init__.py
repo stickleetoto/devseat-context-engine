@@ -27,10 +27,21 @@ from .facts import (
     extract_facts,
 )
 from .relevance import lexical_features, lexical_relevance
+from .temporal import (
+    CorrectionApproval,
+    TemporalAnalysis,
+    TemporalCompressionResult,
+    TemporalEvidenceError,
+    TemporalFact,
+    TemporalGroup,
+    analyze_temporal,
+    compress_temporal,
+)
 
 __all__ = [
     "AssignmentConflict",
     "BudgetExceeded",
+    "CorrectionApproval",
     "ContextEngine",
     "ContextResult",
     "DocumentResult",
@@ -40,12 +51,19 @@ __all__ = [
     "FactAwareResult",
     "MissingEvidence",
     "Segment",
+    "TemporalAnalysis",
+    "TemporalCompressionResult",
+    "TemporalEvidenceError",
+    "TemporalFact",
+    "TemporalGroup",
     "approximate_tokens",
+    "analyze_temporal",
     "audit_facts",
     "available_input_budget",
     "candidate_conflicts",
     "compress_document",
     "compress_fact_aware",
+    "compress_temporal",
     "extract_facts",
     "lexical_features",
     "lexical_relevance",
