@@ -1,0 +1,96 @@
+{
+  "schema": 1,
+  "data_use": "local_evaluation_only",
+  "explicit_approval": true,
+  "cases": [
+    {
+      "id": "demo-auth-1",
+      "group": "synthetic-auth",
+      "query": "why did authentication fail",
+      "budget_characters": 53,
+      "segments": [
+        {
+          "id": "failure",
+          "text": "Login failed with E401 at 09:30.",
+          "priority": 0,
+          "protected": false
+        },
+        {
+          "id": "noise",
+          "text": "Planning a meeting tomorrow.",
+          "priority": 0,
+          "protected": false
+        },
+        {
+          "id": "policy",
+          "text": "Never delete audit logs.",
+          "priority": 0,
+          "protected": true
+        }
+      ],
+      "gold_ids": [
+        "failure",
+        "policy"
+      ]
+    },
+    {
+      "id": "demo-path-2",
+      "group": "synthetic-stacktrace",
+      "query": "where is the broken file",
+      "budget_characters": 31,
+      "segments": [
+        {
+          "id": "path",
+          "text": "Failed at C:\\app\\service.py:42.",
+          "priority": 0,
+          "protected": false
+        },
+        {
+          "id": "noise",
+          "text": "Lunch at 12:00.",
+          "priority": 0,
+          "protected": false
+        },
+        {
+          "id": "ticket",
+          "text": "INC-123 opened.",
+          "priority": 0,
+          "protected": false
+        }
+      ],
+      "gold_ids": [
+        "path"
+      ]
+    },
+    {
+      "id": "demo-overflow-3",
+      "group": "synthetic-budget",
+      "query": "which settings changed",
+      "budget_characters": 4,
+      "segments": [
+        {
+          "id": "original",
+          "text": "timeout_ms=100",
+          "priority": 0,
+          "protected": true
+        },
+        {
+          "id": "revision",
+          "text": "timeout_ms=500",
+          "priority": 0,
+          "protected": true
+        },
+        {
+          "id": "noise",
+          "text": "A quick reminder.",
+          "priority": 0,
+          "protected": false
+        }
+      ],
+      "gold_ids": [
+        "original",
+        "revision"
+      ]
+    }
+  ]
+}
