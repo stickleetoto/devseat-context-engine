@@ -12,6 +12,7 @@ from typing import Callable, Literal
 from .document import DocumentResult, compress_document, split_document, verify_source_alignment
 from .engine import BudgetExceeded
 from .facts import extract_facts, candidate_conflicts
+from .learning import LinearCPURanker
 
 # Intentionally broad for review: a matching clause may be irrelevant or
 # adversarial. Matching alone MUST NOT promote a document to higher authority.
@@ -165,6 +166,7 @@ def compress_risk_aware(
     separator: str = "\n",
     max_source_chars: int = 100_000,
     max_signals: int = 256,
+    ranker: LinearCPURanker | None = None,
 ) -> RiskCompressionResult:
     """Opt-in risk protection for explicitly trusted and pre-classified data.
 
@@ -191,7 +193,7 @@ def compress_risk_aware(
         )
     document = compress_document(
         source, budget, query=query, required_spans=required,
-        token_counter=token_counter, separator=separator,
+        token_counter=token_counter, separator=separator, ranker=ranker,
     )
     report = audit_risks(source, document, signals, policy=policy, separator=separator)
     if policy == "require" and any(s.kind in protected_kinds for s in report.dropped):

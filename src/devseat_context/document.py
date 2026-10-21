@@ -9,6 +9,7 @@ import re
 from typing import Callable
 
 from .engine import BudgetExceeded, ContextEngine
+from .learning import LinearCPURanker
 from .relevance import prepare_lexical_scorer
 
 _FENCE = re.compile(r"^\s*(`{3,}|~{3,})")
@@ -137,6 +138,7 @@ def compress_document(
     required_spans: tuple[tuple[int, int], ...] = (),
     token_counter: Callable[[str], int] | None = None,
     separator: str = "\n",
+    ranker: LinearCPURanker | None = None,
 ) -> DocumentResult:
     """Choose exact source spans with lexical query relevance and hard literals.
 
@@ -159,6 +161,8 @@ def compress_document(
             raise ValueError("required_spans must contain valid (start,end) offsets")
     if not isinstance(separator, str):
         raise TypeError("separator must be a string")
+    if ranker is not None and not isinstance(ranker, LinearCPURanker):
+        raise TypeError("ranker must be a validated LinearCPURanker or None")
     engine = ContextEngine(token_counter=token_counter, separator=separator)
     if type(budget) is not int or budget < 0:
         raise ValueError("budget must be a nonnegative integer")
@@ -222,7 +226,7 @@ def compress_document(
         raise BudgetExceeded("required literal content exceeds budget")
     # A small proximity boost retains nearby explanatory sentences when they
     # fit. Only source adjacency is used; this is not semantic inference.
-    score_text = prepare_lexical_scorer(query)
+    score_text = ranker.prepare(query) if ranker is not None else prepare_lexical_scorer(query)
     relevance = [score_text(text[s.start:s.end]) for s in merged]
     def score(i: int) -> float:
         near = max((relevance[j] for j in (i - 1, i + 1)

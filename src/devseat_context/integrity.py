@@ -10,6 +10,7 @@ from typing import Callable, Literal
 
 from .document import DocumentResult, compress_document, verify_source_alignment
 from .engine import BudgetExceeded
+from .learning import LinearCPURanker
 from .risk import RiskReport, audit_risks, detect_risks
 
 _RISK_KINDS = frozenset(
@@ -140,6 +141,7 @@ def compress_with_integrity(
     max_obligations: int = 256,
     max_bundles: int = 256,
     max_signals: int = 256,
+    ranker: LinearCPURanker | None = None,
 ) -> IntegrityResult:
     """Compress with verified source obligations and explicit risk policy.
 
@@ -175,7 +177,7 @@ def compress_with_integrity(
     document = compress_document(
         source, budget, query=query,
         required_spans=required_spans,
-        token_counter=token_counter, separator=separator,
+        token_counter=token_counter, separator=separator, ranker=ranker,
     )
     if not verify_source_alignment(source, document, separator=separator):
         raise EvidenceContractError("output is not source-aligned")

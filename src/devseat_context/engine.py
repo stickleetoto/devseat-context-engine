@@ -8,6 +8,7 @@ from dataclasses import dataclass
 import math
 from typing import Callable, Sequence
 
+from .learning import LinearCPURanker
 from .relevance import prepare_lexical_scorer
 
 
@@ -76,7 +77,8 @@ class ContextEngine:
             raise ValueError("token_counter must return a nonnegative integer")
         return value
 
-    def compress(self, segments: Sequence[Segment], budget: int, *, query: str | None = None) -> ContextResult:
+    def compress(self, segments: Sequence[Segment], budget: int, *, query: str | None = None,
+                 ranker: LinearCPURanker | None = None) -> ContextResult:
         """Select full segments; priority wins, then lexical relevance, then input order.
 
         Protected segments are mandatory. Input order and exact text are retained
@@ -86,6 +88,8 @@ class ContextEngine:
             raise ValueError("budget must be a nonnegative integer")
         if query is not None and not isinstance(query, str):
             raise TypeError("query must be a string or None")
+        if ranker is not None and not isinstance(ranker, LinearCPURanker):
+            raise TypeError("ranker must be a validated LinearCPURanker or None")
         seq = tuple(segments)
         if any(not isinstance(s, Segment) for s in seq):
             raise TypeError("segments must contain Segment instances")
@@ -108,7 +112,10 @@ class ContextEngine:
         protected = {i for i, seg in enumerate(seq) if seg.protected}
         if self._count(render(protected)) > budget:
             raise BudgetExceeded("protected content exceeds budget; nothing was silently truncated")
-        if query:
+        if ranker is not None:
+            score_text = ranker.prepare(query or "")
+            scores = tuple((s.id, score_text(s.text)) for s in seq)
+        elif query:
             score_text = prepare_lexical_scorer(query)
             scores = tuple((s.id, score_text(s.text)) for s in seq)
         else:
