@@ -86,3 +86,23 @@ python -m devseat_context.ranker_perf --sizes 1000 10000 50000 --repetitions 5
 
 Training runs synchronously and locally and is not scheduled or
 background work. The model-out option is explicit.
+
+## CPU scoring cost on GitHub Linux (synthetic 10k fragments)
+
+A separate untraced performance job with three repetitions measured:
+
+| Variant | Legacy lexical p50 | Learned scorer p50 |
+|---|---:|---:|
+| Before safe regex prefilters | 33.967ms | 174.218ms |
+| After safe regex prefilters | 35.725ms | 122.058ms |
+
+The learned candidate is about 3.4x slower than the lexical default
+on this short-record synthetic benchmark. An optimization reduced the
+candidate's own measurement by about 30%, and deterministic regex
+equivalence tests prevent changing recognized feature values. CI
+machines and clocks are not pinned across runs. This is NOT a
+same-hardware performance guarantee or expected improvement on real
+data. The baseline behavior is unaffected when no model is supplied.
+
+The next optimization should target per-candidate feature extraction,
+but only if realistic ranking benefits justify this overhead.
