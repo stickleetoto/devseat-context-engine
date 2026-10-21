@@ -39,7 +39,16 @@ remain experimental and may fail closed on untrusted or incomplete input.
 - 150 synthetic generated cases; independent human-reviewed held-out
   evaluation and downstream model tests still open.
 
-### v0.9
+### v0.9.0 — experimental optional CPU learning ranker
+
+- Tiny immutable offline-trained scorer used only for relevance order;
+  default OFF, with no ability to authorize sources or override protection.
+- Group-disjoint handcrafted training/development cases; not independent
+  human-held-out, not model-answer quality.
+- Deterministic retraining, split leakage validation and opt-in CPU profiles.
+- Remaining v0.9 adapter integrations and authorization tests still open.
+
+### v0.9 — remaining adapter/security work
 - Well-specified adapter to DevSeat Agent Harness, typed BIO retrieval
   provenance, and optional Agent-X-Ray tracing.
 - Audit leakage prevention, invalid scope isolation, crash/cancel/fallback.

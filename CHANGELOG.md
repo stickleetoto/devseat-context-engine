@@ -1,3 +1,13 @@
+## 0.9.0 — optional CPU learning ranker candidate (2026-10-21)
+
+- Pure Python logistic regression trained offline from caller-labelled query and candidate pairs.
+- Fourteen bounded numerical features; CPU-only inference, no runtime ML dependencies.
+- Optional ranker for segment, document, risk and integrity compression; default behavior unchanged.
+- Strict non-executable JSON model artifacts with size, schema, finite-weight and checksum checks.
+- Deterministic training, group-disjoint synthetic evaluation, Unicode and safety regressions.
+- Preserve protected content, exact-offset evidence, nonadditive budget counting.
+- Real-world held-out recall, LLM-answer comparisons and Harness/BIO adapters remain unfinished.
+
 ## 0.8.2 — exact evidence-integrity and conservative review (2026-10-21)
 
 - Add explicit source-offset obligations checked against original text.

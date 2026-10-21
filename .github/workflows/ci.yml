@@ -52,3 +52,5 @@ jobs:
         run: python -m devseat_context.perf_benchmark --sizes 250 1000 10000 50000 --repetitions 3 --legacy-max 250
       - name: CPU lexical hotspot profiler smoke
         run: python -m devseat_context.perf_profile --segments 1000 --top 12
+      - name: Learned CPU ranker overhead smoke
+        run: python -m devseat_context.ranker_perf --sizes 1000 10000 --repetitions 3
