@@ -1,0 +1,510 @@
+{
+  "schema": 1,
+  "description": "Handcrafted synthetic query-pair development data, NOT independent held-out evidence. No private context.",
+  "examples": [
+    {
+      "group": "train-error-1",
+      "split": "train",
+      "query": "인증 실패 원인이 뭐야",
+      "text": "At auth gateway, request failed with E410 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "train-error-1",
+      "split": "train",
+      "query": "인증 실패 원인이 뭐야",
+      "text": "Login failure guide reviewed at a meeting on Thursday 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-error-2",
+      "split": "train",
+      "query": "why did login fail",
+      "text": "At auth gateway, request failed with E411 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "train-error-2",
+      "split": "train",
+      "query": "why did login fail",
+      "text": "Login failure guide reviewed at a meeting on Thursday 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-error-3",
+      "split": "train",
+      "query": "서버 오류 원인",
+      "text": "At auth gateway, request failed with E412 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "train-error-3",
+      "split": "train",
+      "query": "서버 오류 원인",
+      "text": "Login failure guide reviewed at a meeting on Thursday 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-error-4",
+      "split": "train",
+      "query": "what caused request failure",
+      "text": "At auth gateway, request failed with E413 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "train-error-4",
+      "split": "train",
+      "query": "what caused request failure",
+      "text": "Login failure guide reviewed at a meeting on Thursday 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-error-5",
+      "split": "dev",
+      "query": "인증 에러 코드",
+      "text": "At auth gateway, request failed with E414 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "dev-error-5",
+      "split": "dev",
+      "query": "인증 에러 코드",
+      "text": "Login failure guide reviewed at a meeting on Thursday 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-error-6",
+      "split": "dev",
+      "query": "why does API fail",
+      "text": "At auth gateway, request failed with E415 during authentication.",
+      "relevant": true
+    },
+    {
+      "group": "dev-error-6",
+      "split": "dev",
+      "query": "why does API fail",
+      "text": "Login failure guide reviewed at a meeting on Thursday 5.",
+      "relevant": false
+    },
+    {
+      "group": "train-date-1",
+      "split": "train",
+      "query": "언제 장애가 발생했어",
+      "text": "Incident occurred on 2026-10-10 at 08:45.",
+      "relevant": true
+    },
+    {
+      "group": "train-date-1",
+      "split": "train",
+      "query": "언제 장애가 발생했어",
+      "text": "Please discuss the incident timeline tomorrow with team 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-date-2",
+      "split": "train",
+      "query": "what time did it start",
+      "text": "Incident occurred on 2026-10-11 at 09:45.",
+      "relevant": true
+    },
+    {
+      "group": "train-date-2",
+      "split": "train",
+      "query": "what time did it start",
+      "text": "Please discuss the incident timeline tomorrow with team 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-date-3",
+      "split": "train",
+      "query": "발생 날짜를 알려줘",
+      "text": "Incident occurred on 2026-10-12 at 10:45.",
+      "relevant": true
+    },
+    {
+      "group": "train-date-3",
+      "split": "train",
+      "query": "발생 날짜를 알려줘",
+      "text": "Please discuss the incident timeline tomorrow with team 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-date-4",
+      "split": "train",
+      "query": "when was the outage",
+      "text": "Incident occurred on 2026-10-13 at 11:45.",
+      "relevant": true
+    },
+    {
+      "group": "train-date-4",
+      "split": "train",
+      "query": "when was the outage",
+      "text": "Please discuss the incident timeline tomorrow with team 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-date-5",
+      "split": "dev",
+      "query": "정확한 장애 시각",
+      "text": "Incident occurred on 2026-10-14 at 12:45.",
+      "relevant": true
+    },
+    {
+      "group": "dev-date-5",
+      "split": "dev",
+      "query": "정확한 장애 시각",
+      "text": "Please discuss the incident timeline tomorrow with team 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-date-6",
+      "split": "dev",
+      "query": "what date did this happen",
+      "text": "Incident occurred on 2026-10-15 at 13:45.",
+      "relevant": true
+    },
+    {
+      "group": "dev-date-6",
+      "split": "dev",
+      "query": "what date did this happen",
+      "text": "Please discuss the incident timeline tomorrow with team 5.",
+      "relevant": false
+    },
+    {
+      "group": "train-path-1",
+      "split": "train",
+      "query": "오류 파일 위치 알려줘",
+      "text": "Stack trace points to C:\\services\\app0\\auth.py at line 30.",
+      "relevant": true
+    },
+    {
+      "group": "train-path-1",
+      "split": "train",
+      "query": "오류 파일 위치 알려줘",
+      "text": "Update the file search documentation in project 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-path-2",
+      "split": "train",
+      "query": "which file is broken",
+      "text": "Stack trace points to C:\\services\\app1\\auth.py at line 31.",
+      "relevant": true
+    },
+    {
+      "group": "train-path-2",
+      "split": "train",
+      "query": "which file is broken",
+      "text": "Update the file search documentation in project 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-path-3",
+      "split": "train",
+      "query": "에러 경로는 어디야",
+      "text": "Stack trace points to C:\\services\\app2\\auth.py at line 32.",
+      "relevant": true
+    },
+    {
+      "group": "train-path-3",
+      "split": "train",
+      "query": "에러 경로는 어디야",
+      "text": "Update the file search documentation in project 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-path-4",
+      "split": "train",
+      "query": "find the stack trace path",
+      "text": "Stack trace points to C:\\services\\app3\\auth.py at line 33.",
+      "relevant": true
+    },
+    {
+      "group": "train-path-4",
+      "split": "train",
+      "query": "find the stack trace path",
+      "text": "Update the file search documentation in project 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-path-5",
+      "split": "dev",
+      "query": "어떤 소스 파일이야",
+      "text": "Stack trace points to C:\\services\\app4\\auth.py at line 34.",
+      "relevant": true
+    },
+    {
+      "group": "dev-path-5",
+      "split": "dev",
+      "query": "어떤 소스 파일이야",
+      "text": "Update the file search documentation in project 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-path-6",
+      "split": "dev",
+      "query": "where is the failed module",
+      "text": "Stack trace points to C:\\services\\app5\\auth.py at line 35.",
+      "relevant": true
+    },
+    {
+      "group": "dev-path-6",
+      "split": "dev",
+      "query": "where is the failed module",
+      "text": "Update the file search documentation in project 5.",
+      "relevant": false
+    },
+    {
+      "group": "train-config-1",
+      "split": "train",
+      "query": "설정 변경 내용 알려줘",
+      "text": "Runtime override timeout_ms=500 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "train-config-1",
+      "split": "train",
+      "query": "설정 변경 내용 알려줘",
+      "text": "Planning a configuration review meeting next week 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-config-2",
+      "split": "train",
+      "query": "what is the timeout setting",
+      "text": "Runtime override timeout_ms=510 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "train-config-2",
+      "split": "train",
+      "query": "what is the timeout setting",
+      "text": "Planning a configuration review meeting next week 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-config-3",
+      "split": "train",
+      "query": "현재 서버 설정값은",
+      "text": "Runtime override timeout_ms=520 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "train-config-3",
+      "split": "train",
+      "query": "현재 서버 설정값은",
+      "text": "Planning a configuration review meeting next week 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-config-4",
+      "split": "train",
+      "query": "which config value changed",
+      "text": "Runtime override timeout_ms=530 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "train-config-4",
+      "split": "train",
+      "query": "which config value changed",
+      "text": "Planning a configuration review meeting next week 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-config-5",
+      "split": "dev",
+      "query": "타임아웃 값 확인",
+      "text": "Runtime override timeout_ms=540 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "dev-config-5",
+      "split": "dev",
+      "query": "타임아웃 값 확인",
+      "text": "Planning a configuration review meeting next week 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-config-6",
+      "split": "dev",
+      "query": "configuration parameter value",
+      "text": "Runtime override timeout_ms=550 was applied.",
+      "relevant": true
+    },
+    {
+      "group": "dev-config-6",
+      "split": "dev",
+      "query": "configuration parameter value",
+      "text": "Planning a configuration review meeting next week 5.",
+      "relevant": false
+    },
+    {
+      "group": "train-policy-1",
+      "split": "train",
+      "query": "삭제하면 안 되는 것은",
+      "text": "Never delete backup data for service 0.",
+      "relevant": true
+    },
+    {
+      "group": "train-policy-1",
+      "split": "train",
+      "query": "삭제하면 안 되는 것은",
+      "text": "The security policy presentation will be scheduled for team 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-policy-2",
+      "split": "train",
+      "query": "what must never be deleted",
+      "text": "Never delete backup data for service 1.",
+      "relevant": true
+    },
+    {
+      "group": "train-policy-2",
+      "split": "train",
+      "query": "what must never be deleted",
+      "text": "The security policy presentation will be scheduled for team 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-policy-3",
+      "split": "train",
+      "query": "보안 정책 금지 사항",
+      "text": "Never delete backup data for service 2.",
+      "relevant": true
+    },
+    {
+      "group": "train-policy-3",
+      "split": "train",
+      "query": "보안 정책 금지 사항",
+      "text": "The security policy presentation will be scheduled for team 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-policy-4",
+      "split": "train",
+      "query": "which action is prohibited",
+      "text": "Never delete backup data for service 3.",
+      "relevant": true
+    },
+    {
+      "group": "train-policy-4",
+      "split": "train",
+      "query": "which action is prohibited",
+      "text": "The security policy presentation will be scheduled for team 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-policy-5",
+      "split": "dev",
+      "query": "로그 삭제 정책이 뭐야",
+      "text": "Never delete backup data for service 4.",
+      "relevant": true
+    },
+    {
+      "group": "dev-policy-5",
+      "split": "dev",
+      "query": "로그 삭제 정책이 뭐야",
+      "text": "The security policy presentation will be scheduled for team 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-policy-6",
+      "split": "dev",
+      "query": "what is not allowed",
+      "text": "Never delete backup data for service 5.",
+      "relevant": true
+    },
+    {
+      "group": "dev-policy-6",
+      "split": "dev",
+      "query": "what is not allowed",
+      "text": "The security policy presentation will be scheduled for team 5.",
+      "relevant": false
+    },
+    {
+      "group": "train-ticket-1",
+      "split": "train",
+      "query": "장애 티켓 번호가 뭐야",
+      "text": "Tracking issue INC-1500 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "train-ticket-1",
+      "split": "train",
+      "query": "장애 티켓 번호가 뭐야",
+      "text": "Discuss ticket planning with the incident team at lunch 0.",
+      "relevant": false
+    },
+    {
+      "group": "train-ticket-2",
+      "split": "train",
+      "query": "what is the incident ticket",
+      "text": "Tracking issue INC-1501 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "train-ticket-2",
+      "split": "train",
+      "query": "what is the incident ticket",
+      "text": "Discuss ticket planning with the incident team at lunch 1.",
+      "relevant": false
+    },
+    {
+      "group": "train-ticket-3",
+      "split": "train",
+      "query": "티켓 ID를 알려줘",
+      "text": "Tracking issue INC-1502 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "train-ticket-3",
+      "split": "train",
+      "query": "티켓 ID를 알려줘",
+      "text": "Discuss ticket planning with the incident team at lunch 2.",
+      "relevant": false
+    },
+    {
+      "group": "train-ticket-4",
+      "split": "train",
+      "query": "which issue is tracked",
+      "text": "Tracking issue INC-1503 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "train-ticket-4",
+      "split": "train",
+      "query": "which issue is tracked",
+      "text": "Discuss ticket planning with the incident team at lunch 3.",
+      "relevant": false
+    },
+    {
+      "group": "dev-ticket-5",
+      "split": "dev",
+      "query": "관련 사건 번호는",
+      "text": "Tracking issue INC-1504 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "dev-ticket-5",
+      "split": "dev",
+      "query": "관련 사건 번호는",
+      "text": "Discuss ticket planning with the incident team at lunch 4.",
+      "relevant": false
+    },
+    {
+      "group": "dev-ticket-6",
+      "split": "dev",
+      "query": "incident identifier",
+      "text": "Tracking issue INC-1505 was opened by operations.",
+      "relevant": true
+    },
+    {
+      "group": "dev-ticket-6",
+      "split": "dev",
+      "query": "incident identifier",
+      "text": "Discuss ticket planning with the incident team at lunch 5.",
+      "relevant": false
+    }
+  ]
+}

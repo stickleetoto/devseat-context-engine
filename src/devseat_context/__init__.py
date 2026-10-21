@@ -34,6 +34,13 @@ from .integrity import (
     IntegrityResult,
     compress_with_integrity,
 )
+from .learning import (
+    LinearCPURanker,
+    RankerModelError,
+    TrainingExample,
+    prepare_ranker_features,
+    train_cpu_ranker,
+)
 from .quality import GoldEvidence, QualityResult, audit_quality, locate_gold
 from .relevance import lexical_features, lexical_relevance
 from .risk import (
@@ -84,8 +91,10 @@ __all__ = [
     "FinalBudget",
     "GoldEvidence",
     "IntegrityResult",
+    "LinearCPURanker",
     "MissingEvidence",
     "QualityResult",
+    "RankerModelError",
     "RenderedTokenCounter",
     "RiskCompressionResult",
     "RiskLimitExceeded",
@@ -100,6 +109,7 @@ __all__ = [
     "TiktokenCounter",
     "TokenizerConfigurationError",
     "TokenizerUnavailable",
+    "TrainingExample",
     "analyze_temporal",
     "approximate_tokens",
     "audit_facts",
@@ -117,7 +127,9 @@ __all__ = [
     "lexical_features",
     "lexical_relevance",
     "locate_gold",
+    "prepare_ranker_features",
     "split_document",
+    "train_cpu_ranker",
     "verify_final_budget",
     "verify_source_alignment",
 ]
