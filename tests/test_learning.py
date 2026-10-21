@@ -224,3 +224,29 @@ def test_invalid_ranker_rejected_on_both_entry_points():
         ContextEngine(len).compress([Segment("a", "a")], 1, ranker=lambda _: 1)
     with pytest.raises(TypeError):
         compress_document("A.", 10, token_counter=len, ranker=object())
+
+
+@pytest.mark.parametrize("seed", range(50))
+def test_regex_prefilters_are_exact_over_mixed_source_text(seed):
+    import devseat_context.learning as learning
+
+    rng = random.Random(1000 + seed)
+    fragments = (
+        "E401", "ERR_500", "Traceback", "INC-31", "ticket 22",
+        "2026-10-21", "10:42", "C:\\tools\\a.py", "/srv/auth/app",
+        "timeout=500", "Never", "cannot", "don't", "안 됩니다",
+        "로그를 삭제해서는 안 됩니다", "보관해야합니다", "hello",
+        "그날", "more", "", "⭐", "word",
+    )
+    for _ in range(20):
+        source = " ".join(rng.choice(fragments) for _ in range(rng.randrange(1, 12)))
+        actual = prepare_ranker_features("why did E401 happen")(source)
+        expected = (
+            float(bool(learning._ERROR.search(source))),
+            float(bool(learning._DATETIME.search(source))),
+            float(bool(learning._PATH.search(source))),
+            float(bool(learning._ASSIGN.search(source))),
+            float(bool(learning._NEGATION.search(source))),
+            float(bool(learning._TICKET.search(source))),
+        )
+        assert actual[1:7] == expected
