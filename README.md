@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.8.2 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.9.0 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,63 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.9.0 experimental — opt-in learned CPU ranker
+
+The optional CPU ranker is a small logistic regression model implemented
+entirely in standard-library Python. It trains locally on explicitly labeled
+query/candidate pairs and scores ranking only. No pretrained LLM, sklearn,
+GPU or external API is required. The default lexical scorer is unchanged.
+
+~~~python
+from devseat_context import (
+    ContextEngine, Segment, TrainingExample, train_cpu_ranker,
+    LinearCPURanker,
+)
+
+rows = [
+    TrainingExample("why login failed", "E401 authentication failure", True, "a"),
+    TrainingExample("why login failed", "Lunch reminder", False, "a"),
+    TrainingExample("오류 파일 위치", r"C:\services\auth.py", True, "b"),
+    TrainingExample("오류 파일 위치", "Meeting notes", False, "b"),
+]
+model = train_cpu_ranker(rows, epochs=80, seed=17)
+model.save("cpu-ranker.json")
+model = LinearCPURanker.load("cpu-ranker.json")
+
+items = [
+    Segment("note", "Team lunch meeting"),
+    Segment("log", "Request failed with E401"),
+]
+result = ContextEngine(token_counter=len).compress(
+    items, budget=35, query="why did login fail", ranker=model,
+)
+print(result.selected_ids, result.output_tokens)
+~~~
+
+The ranker parameter is supported as explicit opt-in by ContextEngine,
+compress_document, compress_risk_aware, and compress_with_integrity.
+It cannot elevate untrusted source contents, bypass protected segments,
+ignore caller-required exact spans, or avoid final budget checks.
+The serialized model contains weights only, not examples. A checksum
+detects accidental changes, NOT an attacker with model-file access.
+Load only models approved by your own application.
+
+~~~powershell
+python -m devseat_context.ranker_benchmark
+python -m devseat_context.ranker_benchmark --model-out cpu-ranker.json
+python -m devseat_context.ranker_perf --sizes 1000 10000 --repetitions 5
+~~~
+
+The 72 example pairs are small handcrafted synthetic development data
+(48 training rows in 24 groups, 24 evaluation rows in 12 other groups).
+The old lexical scorer selected the correct item in 9 of 12 dev groups;
+the learned scorer did so in 12 of 12. This is NOT independent held-out
+generalization, semantic QA correctness or a safe production promotion.
+The data was authored while the features were being developed.
+
+Read the [research memo](docs/CPU_LEARNING_RANKER_20261021.md) before using
+the model in an agent. Keep the default rule-based path as a fallback.
 
 ## v0.8.2 experimental — exact evidence-integrity and review gate
 
