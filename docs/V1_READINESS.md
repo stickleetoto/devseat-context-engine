@@ -48,6 +48,15 @@ remain experimental and may fail closed on untrusted or incomplete input.
 - Deterministic retraining, split leakage validation and opt-in CPU profiles.
 - Remaining v0.9 adapter integrations and authorization tests still open.
 
+### v0.9.1 — offline agent replay and shadow evaluation
+
+- Caller-authorized bounded local replay suites with human-reviewed segment
+  labels and deterministic baseline vs opt-in trained ranker comparisons.
+- Aggregate-only reports, explicit refusal accounting and privacy guards.
+- No automatic reading of Codex transcripts, self-learning from unverified
+  completions, actual model-task execution or source authorization.
+- Production-ready task-success and true held-out measurements are still open.
+
 ### v0.9 — remaining adapter/security work
 - Well-specified adapter to DevSeat Agent Harness, typed BIO retrieval
   provenance, and optional Agent-X-Ray tracing.
