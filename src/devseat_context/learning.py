@@ -155,13 +155,22 @@ def prepare_ranker_features(query: str):
     def extract(text: str) -> tuple[float, ...]:
         if not isinstance(text, str) or len(text) > _MAX_TEXT_CHARS:
             raise ValueError("segment text must be within feature length limit")
+        # Cheap NECESSARY prefilters avoid six regex passes for most short
+        # records. They must never exclude text that the corresponding
+        # regex could match: otherwise learned scores would silently drift.
+        folded = text.casefold()
+        negation_hint = any(piece in folded for piece in (
+            "never", "cannot", "can't", "don't", "not", "forbidden",
+            "prohibited", "안", "해서는", "금지", "불가", "않", "하지",
+        ))
         present = (
-            float(bool(_ERROR.search(text))),
-            float(bool(_DATETIME.search(text))),
-            float(bool(_PATH.search(text))),
-            float(bool(_ASSIGN.search(text))),
-            float(bool(_NEGATION.search(text))),
-            float(bool(_TICKET.search(text))),
+            float("e" in folded and bool(_ERROR.search(text))),
+            float(any(c in text for c in "-/:") and bool(_DATETIME.search(text))),
+            float(("\\" in text or "/" in text) and bool(_PATH.search(text))),
+            float("=" in text and bool(_ASSIGN.search(text))),
+            float(negation_hint and bool(_NEGATION.search(text))),
+            float(any(tag in folded for tag in ("inc", "ticket", "issue"))
+                  and bool(_TICKET.search(text))),
         )
         return (
             lexical(text), *present,
