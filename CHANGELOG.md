@@ -1,3 +1,13 @@
+## 0.9.1 — offline shadow replay harness (2026-10-21)
+
+- Add an explicit-approval-only local replay suite schema for reviewed agent context examples.
+- Run lexical default and optional learned CPU ranker on identical sources and character budgets.
+- Return aggregate source-ID retention, budget refusals, protection checks and paired comparison.
+- Strict input/resource validation and no raw questions, prompt text, source IDs or case details in reports.
+- Synthetic test fixture and privacy, malformed input, refused-budget and ranker-regression tests.
+- Do not import Codex logs, perform Codex tasks, retrain, or promote models automatically.
+- Real held-out agent tasks, post-task success evaluations and source authorization remain undone.
+
 ## 0.9.0 — optional CPU learning ranker candidate (2026-10-21)
 
 - Pure Python logistic regression trained offline from caller-labelled query and candidate pairs.

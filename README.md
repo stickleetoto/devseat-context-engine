@@ -1,6 +1,6 @@
 # DevSeat Context Engine
 
-**v0.9.0 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
+**v0.9.1 experimental** — A CPU-first, model-optional context toolkit for query-aware selection, source-aligned extraction, fact auditing, and explicit temporal corrections. It does not provide semantic equivalence guarantees, automatically determine truth, or sanitize prompt injection.
 
 ## Quick start
 
@@ -65,6 +65,52 @@ The default tokenizer is only a rough UTF-8 estimate. For production provide a c
 ### License / status
 
 Apache-2.0. This is a new independent implementation; no proprietary Cognitive Guard code was imported. Experimental modules are not yet benchmark-qualified for general deployment.
+
+## v0.9.1 experimental — offline Agent Replay & Shadow Evaluation
+
+This is the first step toward *real-world Codex-driven tuning*, **not** a
+connector that secretly accesses or controls Codex. The tool replays context
+selection on a caller-provided, manually reviewed local JSON suite. It
+compares the unchanged lexical baseline with an explicitly selected,
+locally trained CPU ranker, and exports only aggregate evidence-retention
+and refusal metrics. It never trains automatically.
+
+~~~powershell
+# Smoke test bundled artificial sample without a learned ranker
+python -m devseat_context.agent_replay --suite benchmarks/replay_synthetic.json
+
+# Compare both modes with an existing, explicitly approved local weights file
+python -m devseat_context.agent_replay --suite benchmarks/replay_synthetic.json --model cpu-ranker.json
+
+# In Windows with restricted system Temp permissions
+.\.venv\Scripts\python.exe -m pytest -q --basetemp .pytest-local
+~~~
+
+To start evaluating actual development work, review/authorize one Codex
+task yourself, **remove secrets and private content before writing it**,
+and create a local suite in .replay-private/. Do not automatically
+copy agent transcripts, tool outputs, email, account data, code from private
+repositories, tokens, or users' prompts into training/evaluation data.
+The tool requires an explicit_approval flag for local evaluation only,
+but a JSON flag cannot verify consent or data labeling quality.
+
+Suite schema version 1:
+- schema: 1; data_use: local_evaluation_only; explicit_approval: true
+- cases: entries with id, group, query, budget_characters, segments, gold_ids
+- each segment: id, text, priority (integer), protected (boolean)
+- gold_ids: caller-reviewed exact segment IDs needed for the task, not
+  learner-generated labels or self-asserted instructions from source text
+
+There are strict file, case, segment and text size bounds and schema checks.
+Reports omit all original identifiers, text, questions and per-case guesses.
+A baseline refusal and a missed gold label are separately counted.
+A model score never changes protected-segment policy. Results reflect
+**character budgets** and caller-provided evidence labels, NOT agent
+task completion, real provider-token usage, validated semantics or
+independently tested generalization.
+
+For the capture/evaluation protocol see
+[Agent replay research](docs/AGENT_REPLAY_V091_20261021.md).
 
 ## v0.9.0 experimental — opt-in learned CPU ranker
 
